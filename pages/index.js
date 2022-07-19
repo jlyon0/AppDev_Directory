@@ -1,9 +1,9 @@
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useState, useRef } from "react";
 import ProfileGrid from "../comps/profileGrid";
 export default function directory() {
 
-  const [loggedInUser, setLoggedInUser] = useState(null)
+  
   const [profiles, setProfiles] = useState([
     {
       id: "temp"
@@ -33,19 +33,6 @@ export default function directory() {
 
   };
 
-  const getAllProfiles = async() => {
-    console.log("Fetching profiles")
-    const options = {
-      method: "GET",
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }
-    const res = await fetch(`${process.env.apiUrl}/profiles?skip=0&limit=100`, options)
-    const json = await res.json();
-    setProfiles(json);
-    console.log(profiles);
-  }
   const getAllUsers = async() => {
     console.log("Fetching profiles")
     const options = {

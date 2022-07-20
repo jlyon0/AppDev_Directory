@@ -10,14 +10,11 @@ let pages =[
     {
         title: 'Home',
         link: '/',
-    },{
-        title: 'Edit Profile',
-        link: '/edit-profile/'
     }];
 
 const settings = [
     {
-        title: 'login',
+        title: 'Login',
         link: "/api/auth/signin",
     },{
         title: 'Logout',
@@ -26,11 +23,23 @@ const settings = [
 
 export default function Layout({ children }) {
     const { data: session } = useSession()
+    const [ avatarSrc, setAvatar] = useState("bulldog.jpg");
 
     if(session) {
         console.log("User is logged in fetching avatar picture")
         console.log("Signed in as")
         console.log(session.user.name)
+
+        pages = [
+            {
+                title: 'Home',
+                link: '/',
+            },{
+                title: 'Edit Profile',
+                link: '/edit-profile/'
+            }];
+        if(avatarSrc == "bulldog.jpg")
+            setAvatar("chimp2.jpg")
     }else {
         console.log("Not Signed in")
     }
@@ -42,7 +51,6 @@ export default function Layout({ children }) {
       };
     const handleCloseUserMenu = () => {
         setAnchorElUser("")
-    
       };
     function handleClickSetting({setting}) {
 
@@ -82,7 +90,7 @@ export default function Layout({ children }) {
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p:0 }}>
-                                    <Avatar alt="User Photo" src="/chimp2.jpg" />
+                                    <Avatar alt="User Photo" src={avatarSrc} />
                                 </IconButton>
                             </Tooltip>
                             <Menu

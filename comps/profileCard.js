@@ -11,7 +11,7 @@ import EditProfile from './btnEditProfile';
 import ShowMore from './btnShowMore';
 
 
-export default function TestProfileCard({user}) {
+export default function ProfileCard({user}) {
     const [isLoading, setLoading] = useState(false);
     const [profile, setProfile] = useState(null);
 

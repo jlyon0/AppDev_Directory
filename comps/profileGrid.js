@@ -1,5 +1,5 @@
 import { Grid} from "@mui/material";
-import TestProfileCard from "./testProfileCard";
+import ProfileCard from "./profileCard";
 
 export default function ProfileGrid({users}) {
     
@@ -10,7 +10,7 @@ export default function ProfileGrid({users}) {
             <Grid container direction="column" columnSpacing={3}>
                 {users.map((user) => (
                     <Grid item key={user.emplid} >
-                    <TestProfileCard user={user}/>
+                    <ProfileCard user={user}/>
                     </Grid>
                 ))}
             </Grid>

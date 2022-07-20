@@ -23,6 +23,7 @@ export default function EditProfile({user, profile}) {
     const bioRef = useRef('');
     const officeHoursRef = useRef('');
 
+    
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
@@ -94,7 +95,7 @@ export default function EditProfile({user, profile}) {
 
     const handleRemovePhoto = () => {
         //remove from minio
-        const minioClient = require('../comps/minioClient');
+        const minioClient = require('./minioClient');
         minioClient.removeObject('directory', `${user.username}-photo.jpg`, function(err) {
             if (err) {
                 return console.log("Unable to remove object", err);
@@ -151,7 +152,7 @@ export default function EditProfile({user, profile}) {
     }
     const handleRemoveCV = async () => {
         //remove from minio
-        const minioClient = require('../comps/minioClient');
+        const minioClient = require('./minioClient');
         minioClient.removeObject('directory', `${user.username}-cv.jpg`, function(err) {
             if (err) {
                 return console.log("Unable to remove object", err);
@@ -199,7 +200,7 @@ export default function EditProfile({user, profile}) {
     }
     const handleRemoveResume = () => {
         //remove from minio
-        const minioClient = require('../comps/minioClient');
+        const minioClient = require('./minioClient');
         minioClient.removeObject('directory', `${user.username}-resume.jpg`, function(err) {
             if (err) {
                 return console.log("Unable to remove object", err);
@@ -247,9 +248,9 @@ export default function EditProfile({user, profile}) {
             email: emailRef.current.value,
             phone: phoneRef.current.value,
             bio: bioRef.current.value,
-            photo_url: "http://localhost:9002/directory/"+user.username+"-photo.jpg",
-            resume_url: "n/a",
-            vitae_url: "n/a",
+            photo_url: "",
+            resume_url: "",
+            vitae_url: "",
             office_hours: officeHoursRef.current.value,
             location: locationRef.current.value,
             is_public: true,
@@ -273,6 +274,13 @@ export default function EditProfile({user, profile}) {
             alert("File uploads are incorrect. See red boarders.")
             return;
         }
+
+        if(photoSrc != "")
+            profileData.photo_url = "http://localhost:9002/directory/"+user.username+"-photo.jpg"
+        if(resumeSrc != "")
+            profileData.resume_url = "http://localhost:9002/directory/"+user.username+"-resume.pdf"
+        if(CVSrc != "")
+            profileData.vitae_url = "http://localhost:9002/directory/"+user.username+"-cv.pdf"
 
         // Send the data to the server in JSON format.
         const profileDataJSON= JSON.stringify(profileData);
@@ -304,7 +312,7 @@ export default function EditProfile({user, profile}) {
 
         if(photoSrc != "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
-            const minioClient = require('../comps/minioClient');
+            const minioClient = require('./minioClient');
             minioClient.removeObject('directory', `${user.username}-photo.jpg`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);
@@ -324,7 +332,7 @@ export default function EditProfile({user, profile}) {
         }
         if(CVSrc!= "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
-            const minioClient = require('../comps/minioClient');
+            const minioClient = require('./minioClient');
             minioClient.removeObject('directory', `${user.username}-cv.pdf`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);
@@ -345,7 +353,7 @@ export default function EditProfile({user, profile}) {
 
         if(resumeSrc!= "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
-            const minioClient = require('../comps/minioClient');
+            const minioClient = require('./minioClient');
             minioClient.removeObject('directory', `${user.username}-resume.pdf`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);
@@ -367,6 +375,8 @@ export default function EditProfile({user, profile}) {
 
         // alert(`Result: ${result}`);
         setOpen(false);
+        
+        
         
     };
 

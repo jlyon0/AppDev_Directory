@@ -2,7 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { useState, useRef } from "react";
 import ProfileGrid from "../comps/profileGrid";
 export default function directory() {
-
+  const [,setRefresh] = useState(false)
   
   const [profiles, setProfiles] = useState([
     {
@@ -41,6 +41,7 @@ export default function directory() {
         'Content-Type': 'application/json',
       }
     }
+    // const res = await fetch(`${process.env.apiUrl}/users?skip=0&limit=100`, options)
     const res = await fetch(`${process.env.apiUrl}/users?skip=0&limit=100`, options)
     const json = await res.json();
     setUsers(json);
@@ -52,7 +53,7 @@ export default function directory() {
     return;
   }
  
-  return(
+   return(
       <div>
         <title>Butler Directory</title>
           
@@ -78,8 +79,7 @@ export default function directory() {
         <br/>
         <br/>
         <Button onClick={getAllUsers} >Search all faculty/staff</Button>  
-        <ProfileGrid users={users}/>
-              
+        <ProfileGrid users={users}/>              
       </div>
   )
 }

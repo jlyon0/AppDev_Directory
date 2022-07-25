@@ -12,8 +12,8 @@ import { useSession } from 'next-auth/react';
 
 export default function EditProfile({user, profile}) {
     const { data: session } = useSession()
-    if(!session)
-        return;
+    // if(!session)
+    //    return;
 
     const emailRef = useRef('');
     const phoneRef = useRef('');
@@ -274,6 +274,7 @@ export default function EditProfile({user, profile}) {
             alert("File uploads are incorrect. See red boarders.")
             return;
         }
+	console.log("photoSrc", photoSrc);
 
         if(photoSrc != "")
             profileData.photo_url = "http://localhost:9002/directory/"+user.username+"-photo.jpg"

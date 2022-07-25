@@ -3,7 +3,7 @@ import ProfileCard from "./profileCard";
 
 export default function ProfileGrid({users}) {
     
-    if(users[0].id == "temp")
+    if(users==null)
       return (<p>Please search something</p>);
     else {
         return(

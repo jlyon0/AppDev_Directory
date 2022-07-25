@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   env: {
-    apiUrl: "https://localhost:3002",
+    apiUrl: "https://docker-dev.butler.edu:3002",
     minioUrl: "https://localhost:9002/directory",
     GitHub_ID: "5da26551d316f537418f",
     GitHub_Secret: "3cb0140b1353b45e1538d40707ee08f08cb00ca8",

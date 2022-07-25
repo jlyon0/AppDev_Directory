@@ -2,8 +2,8 @@ const { createServer } = require("https");
 const { parse } = require("url");
 const next = require("next");
 const fs = require("fs");
-// const hostname = 'docker-dev.butler.edu'
-const hostname = 'localhost'
+const hostname = 'docker-dev.butler.edu'
+// const hostname = 'localhost'
 const port = 3000;
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev, hostname, port })

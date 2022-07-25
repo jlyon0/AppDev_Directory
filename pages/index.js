@@ -9,11 +9,7 @@ export default function directory() {
       id: "temp"
     }
   ]);
-  const [users, setUsers] = useState([
-    {
-      id: "temp"
-    }
-  ])
+  const [users, setUsers] = useState(null);
 
   const searchRef = useRef('');
   let ids = [];
@@ -29,7 +25,12 @@ export default function directory() {
     console.log("Fetching profiles")
     let res = await fetch(`${process.env.apiUrl}/search?terms=${searchRef.current.value}&skip=0&limit=100`);
     let json = await res.json();  
-    setUsers(json);
+    if(json.length == 0){
+	    setUsers(null);
+    }else{
+	    setUsers(json);
+    }
+
 
   };
 

@@ -3,7 +3,7 @@
 import { AppBar, Container, Menu, MenuItem, Toolbar, Typography, Box, Button, Link, Avatar, Tooltip, IconButton} from '@mui/material'
 import { useSession } from 'next-auth/react';
 import {useState} from "react"
-
+import { useUser } from '@auth0/nextjs-auth0';
 
 
 let pages =[
@@ -15,20 +15,21 @@ let pages =[
 const settings = [
     {
         title: 'Login',
-        link: "/api/auth/signin",
+        link: "/api/auth/login",
     },{
         title: 'Logout',
-        link: "/api/auth/signout",
+        link: "/api/auth/logout",
     }];
 
 export default function Layout({ children }) {
-    const { data: session } = useSession()
+    const { user, error, isLoading } = useUser()
     const [ avatarSrc, setAvatar] = useState("bulldog.jpg");
 
-    if(session) {
+    if(user) {
         console.log("User is logged in fetching avatar picture")
         console.log("Signed in as")
-        console.log(session.user.name)
+        console.log(user)
+	console.log(user['https://my.butler.edu/app_metadata'].employeenumber)
 
         pages = [
             {

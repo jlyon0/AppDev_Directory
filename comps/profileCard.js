@@ -14,6 +14,7 @@ import ShowMore from './btnShowMore';
 export default function ProfileCard({user}) {
     const [isLoading, setLoading] = useState(false);
     const [profile, setProfile] = useState(null);
+    console.log("ProfileCard emplid", user.emplid)
 
     const requestProfile = `${process.env.apiUrl}/profiles/${user.emplid}`
 

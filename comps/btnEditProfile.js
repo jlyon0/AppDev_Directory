@@ -7,12 +7,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import React from 'react';
 import { useState, useRef } from 'react';
-import { useSession } from 'next-auth/react';
-
+import { useUser } from '@auth0/nextjs-auth0';
 
 export default function EditProfile({user, profile}) {
-    const { data: session } = useSession()
-    // if(!session)
+    const { user0, error, isLoading } = useUser();
+    // if(!user0)
     //    return;
 
     const emailRef = useRef('');
@@ -277,7 +276,7 @@ export default function EditProfile({user, profile}) {
 	console.log("photoSrc", photoSrc);
 
         if(photoSrc != "")
-            profileData.photo_url = "http://localhost:9002/directory/"+user.username+"-photo.jpg"
+            profileData.photo_url = "http://docker-dev.butler.edu:9002/directory/"+user.username+"-photo.jpg"
         if(resumeSrc != "")
             profileData.resume_url = "http://localhost:9002/directory/"+user.username+"-resume.pdf"
         if(CVSrc != "")

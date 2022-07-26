@@ -18,5 +18,5 @@ COPY next.config.js .
 EXPOSE 3000
 
 CMD ["npm", "run", "dev"]
-# CMD ["npm", "run", "dev-ssl"]
-# CMD ["build", "run", "prod"]
+# CMD ["npm", "run", "start"]
+#CMD ["build", "run", "prod"]

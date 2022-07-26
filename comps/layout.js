@@ -3,7 +3,7 @@
 import { AppBar, Container, Menu, MenuItem, Toolbar, Typography, Box, Button, Link, Avatar, Tooltip, IconButton} from '@mui/material'
 import { useSession } from 'next-auth/react';
 import {useState, useEffect} from "react"
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser, getSession } from '@auth0/nextjs-auth0';
 
 
 let pages =[
@@ -21,6 +21,17 @@ let settings = [
 export default function Layout({ children }) {
     const { user, error, isLoading } = useUser()
     const [ avatarSrc, setAvatar] = useState("bulldog.jpg");
+    const [ userInfo, setUserInfo] = useState(null);
+
+    const getProfile = async() => {
+					
+	const emplid = user['https://my.butler.edu/app_metadata'].employeenumber
+	const url = `${process.env.apiUrl}/users/${emplid}`
+	const res = await fetch(url);
+	const json = await res.json();
+	if(userInfo == null)
+	    setUserInfo(json);
+    }
     if(user) {
        pages = [     
 	    {
@@ -32,15 +43,16 @@ export default function Layout({ children }) {
             }];
 	settings = [    
     	    {
-        	title: 'Login',
-        	link: "/api/auth/login",
-    	    },{
         	title: 'Logout',
         	link: "/api/auth/logout",
     	    }];
 
-        if(avatarSrc == "bulldog.jpg")
-            setAvatar("chimp2.jpg")
+        if(userInfo == null){
+	    getProfile();
+	}
+	if(avatarSrc == "bulldog.jpg" && userInfo) {
+		setAvatar(userInfo.photo_url);
+	}
     
     } 
 
@@ -108,7 +120,7 @@ export default function Layout({ children }) {
                                 }}
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
-                                >
+                            >
                                 {settings.map((setting) => (
                                     <Link href={setting.link}>
                                         <MenuItem key={setting.title} onClick={handleClickSetting({setting})}>
@@ -127,5 +139,5 @@ export default function Layout({ children }) {
                 <main>{children}</main>
             {/* <Footer/> */}
         </>
-    )
+    );
 }

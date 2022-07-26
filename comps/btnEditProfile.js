@@ -286,7 +286,7 @@ export default function EditProfile({userData, profile}) {
         const profileDataJSON= JSON.stringify(profileData);
 
         // API endpoint where we send form data.
-        const profilesEndpoint = `${process.env.apiUrl}/profiles/${userData.emplid}`;
+        let profilesEndpoint = `${process.env.apiUrl}/profiles/${userData.emplid}`;
 
         // Form the request for sending data to the server.
         const options = {
@@ -307,7 +307,14 @@ export default function EditProfile({userData, profile}) {
         const result = await response.json();
         console.log(`Result:`);
         console.log(result);
-        console.log("results: ", result);
+	if(result.detail == 'Profile doesn\'t exist'){
+        	console.log("results: ", result);
+		options.method = "POST";
+		profilesEndpoint = `${process.env.apiUrl}/profiles`;
+		const res = await fetch(profilesEndpoint, options);
+		const json = await res.json();
+		console.log("results:", json);
+	}
 
 
         if(photoSrc != "") {

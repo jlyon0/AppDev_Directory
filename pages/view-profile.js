@@ -14,7 +14,14 @@ export default function EditProfile({ userData, session }) {
     if(user) {
         const emplnum = user['https://my.butler.edu/app_metadata'].employeenumber
     	const requestUser = `${process.env.apiUrl}/users/${emplnum}`
-	
+	console.log("UserData:", userData);
+
+	if(userData.detail)
+	    return( <div> 
+		    	<p>We have no record of your user. Please contact HR.</p>
+		    </div>
+	    );
+
 	return (
 		<ProfileCard user={userData}/>
         );

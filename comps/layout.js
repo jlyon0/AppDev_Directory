@@ -2,7 +2,7 @@
 
 import { AppBar, Container, Menu, MenuItem, Toolbar, Typography, Box, Button, Link, Avatar, Tooltip, IconButton} from '@mui/material'
 import { useSession } from 'next-auth/react';
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import { useUser } from '@auth0/nextjs-auth0';
 
 
@@ -12,38 +12,37 @@ let pages =[
         link: '/',
     }];
 
-const settings = [
+let settings = [
     {
         title: 'Login',
         link: "/api/auth/login",
-    },{
-        title: 'Logout',
-        link: "/api/auth/logout",
     }];
 
 export default function Layout({ children }) {
     const { user, error, isLoading } = useUser()
     const [ avatarSrc, setAvatar] = useState("bulldog.jpg");
-
     if(user) {
-        console.log("User is logged in fetching avatar picture")
-        console.log("Signed in as")
-        console.log(user)
-	console.log(user['https://my.butler.edu/app_metadata'].employeenumber)
-
-        pages = [
-            {
+       pages = [     
+	    {
                 title: 'Home',
                 link: '/',
             },{
-                title: 'Edit Profile',
-                link: '/edit-profile/'
+                title: 'View Profile',
+                link: '/view-profile/'
             }];
+	settings = [    
+    	    {
+        	title: 'Login',
+        	link: "/api/auth/login",
+    	    },{
+        	title: 'Logout',
+        	link: "/api/auth/logout",
+    	    }];
+
         if(avatarSrc == "bulldog.jpg")
             setAvatar("chimp2.jpg")
-    }else {
-        console.log("Not Signed in")
-    }
+    
+    } 
 
     const [anchorElUser, setAnchorElUser] = useState(null);
     

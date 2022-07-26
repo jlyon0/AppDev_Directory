@@ -54,7 +54,7 @@ export default function ProfileCard({user}) {
                             <ShowMore user={user} profile={profile}/>
                         </Grid>
                         <Grid item>
-                            <EditProfile user={user} profile={profile}/>
+                            <EditProfile userData={user} profile={profile}/>
                         </Grid>
                     </Grid>  
                 </CardActions>

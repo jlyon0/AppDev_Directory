@@ -9,10 +9,10 @@ import React from 'react';
 import { useState, useRef } from 'react';
 import { useUser } from '@auth0/nextjs-auth0';
 
-export default function EditProfile({user, profile}) {
-    const { user0, error, isLoading } = useUser();
-    // if(!user0)
-    //    return;
+export default function EditProfile({userData, profile}) {
+    const { user, error, isLoading } = useUser();
+     if(!user)
+        return;
 
     const emailRef = useRef('');
     const phoneRef = useRef('');
@@ -59,7 +59,7 @@ export default function EditProfile({user, profile}) {
                 alert("Error. Incorrect file type. Use .png or .jpg file types.")
                 setPhotoColor('red');
 
-            }else {
+            }else{
                 setPhotoColor('grey');
                 if(resumeColor == CVColor == photoColor == "grey")
                     setVisible_Submit('visible');
@@ -243,7 +243,7 @@ export default function EditProfile({user, profile}) {
             
         // Get data from the form.
         const profileData = {
-            emplid: user.emplid,
+            emplid: userData.emplid,
             email: emailRef.current.value,
             phone: phoneRef.current.value,
             bio: bioRef.current.value,
@@ -276,17 +276,17 @@ export default function EditProfile({user, profile}) {
 	console.log("photoSrc", photoSrc);
 
         if(photoSrc != "")
-            profileData.photo_url = "http://docker-dev.butler.edu:9002/directory/"+user.username+"-photo.jpg"
+            profileData.photo_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-photo.jpg"
         if(resumeSrc != "")
-            profileData.resume_url = "http://localhost:9002/directory/"+user.username+"-resume.pdf"
+            profileData.resume_url = "https://localhost:9002/directory/"+userData.username+"-resume.pdf"
         if(CVSrc != "")
-            profileData.vitae_url = "http://localhost:9002/directory/"+user.username+"-cv.pdf"
+            profileData.vitae_url = "https://localhost:9002/directory/"+userData.username+"-cv.pdf"
 
         // Send the data to the server in JSON format.
         const profileDataJSON= JSON.stringify(profileData);
 
         // API endpoint where we send form data.
-        const profilesEndpoint = `${process.env.apiUrl}/profiles/${user.emplid}`;
+        const profilesEndpoint = `${process.env.apiUrl}/profiles/${userData.emplid}`;
 
         // Form the request for sending data to the server.
         const options = {
@@ -313,7 +313,7 @@ export default function EditProfile({user, profile}) {
         if(photoSrc != "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
             const minioClient = require('./minioClient');
-            minioClient.removeObject('directory', `${user.username}-photo.jpg`, function(err) {
+            minioClient.removeObject('directory', `${userData.username}-photo.jpg`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);
                 }
@@ -321,7 +321,7 @@ export default function EditProfile({user, profile}) {
             
             // Send new photo to minio
             var buffer = new Buffer(photoSrc.split(",")[1], 'base64')
-            var photo_name = `${user.username}-photo.jpg`;
+            var photo_name = `${userData.username}-photo.jpg`;
             console.log("Photo buffer: ", buffer)
 
             minioClient.putObject('directory', photo_name, buffer, function(err, etag) {
@@ -333,7 +333,7 @@ export default function EditProfile({user, profile}) {
         if(CVSrc!= "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
             const minioClient = require('./minioClient');
-            minioClient.removeObject('directory', `${user.username}-cv.pdf`, function(err) {
+            minioClient.removeObject('directory', `${userData.username}-cv.pdf`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);
                 }
@@ -354,7 +354,7 @@ export default function EditProfile({user, profile}) {
         if(resumeSrc!= "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
             const minioClient = require('./minioClient');
-            minioClient.removeObject('directory', `${user.username}-resume.pdf`, function(err) {
+            minioClient.removeObject('directory', `${userData.username}-resume.pdf`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);
                 }
@@ -362,7 +362,7 @@ export default function EditProfile({user, profile}) {
             
             // Send new photo to minio
             var buffer = new Buffer(resumeSrc.split(",")[1], 'base64')
-            var CV_name = `${user.username}-resume.pdf`;
+            var CV_name = `${userData.username}-resume.pdf`;
             console.log("Resume buffer: ", buffer)
 
             minioClient.putObject('directory', CV_name, buffer, function(err, etag) {
@@ -399,7 +399,7 @@ export default function EditProfile({user, profile}) {
                         type="text"
                         fullWidth
                         variant="outlined"
-                        defaultValue={user['firstname']}
+                        defaultValue={userData['firstname']}
                     ></TextField>
                     <TextField
                         autoFocus
@@ -410,7 +410,7 @@ export default function EditProfile({user, profile}) {
                         type="text"
                         fullWidth
                         variant="outlined"
-                        defaultValue={user['lastname']}
+                        defaultValue={userData['lastname']}
                     />
                     <TextField
                         autoFocus

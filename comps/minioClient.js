@@ -1,8 +1,8 @@
 var Minio = require('minio')
 var minioClient = new Minio.Client({
-    endPoint: 'localhost',
+    endPoint: 'docker-dev.butler.edu',
     port: 9002,
-    useSSL: false,
+    useSSL: true,
     accessKey: 'test',
     secretKey: 'supersecret'
 })

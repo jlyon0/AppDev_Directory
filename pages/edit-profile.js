@@ -417,8 +417,7 @@ export default function EditProfile({userData, profile}) {
     return(
         <div>
             <Button size="small" onClick={handleClickOpen}>Edit</Button>
-            
-                <Title>Edit Profile</Title>
+
                 
                 
                     
@@ -577,3 +576,28 @@ export default function EditProfile({userData, profile}) {
         </div>
     )
 }
+export const getServerSideProps = withPageAuthRequired({
+	returnTo: '/',
+	async getServerSideProps(ctx) {
+		const session = getSession(ctx.req, ctx.res);
+		
+		const emplid = session.user['https://my.butler.edu/app_metadata'].employeenumber
+		let url = `${process.env.apiUrl}/users/${emplid}`
+		let res = await fetch(url)
+		let json = await res.json();
+
+		const userData = json;
+
+        url = `${process.env.apiUrl}/profile/${emplid}`
+        res = await fetch(url)
+        json = await res.json();
+
+        const profile = json;
+		return {
+			props: {
+				userData: userData,
+                profile: profile,
+			},
+		};
+	}
+});

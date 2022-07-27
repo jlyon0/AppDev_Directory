@@ -275,12 +275,25 @@ export default function EditProfile({userData, profile}) {
         }
 	console.log("photoSrc", photoSrc);
 
-        if(photoSrc != "")
-            profileData.photo_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-photo.jpg"
-        if(resumeSrc != "")
+	if(photoSrc == ""){
+	    const string = userData.username + "-photo.jpg"
+	    if(exists(string)){
+		console.log("setting existing photo_url");
+            	profileData.photo_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-photo.jpg"
+	    }
+	}
+	if(resumeSrc != ""){
             profileData.resume_url = "https://localhost:9002/directory/"+userData.username+"-resume.pdf"
-        if(CVSrc != "")
+	}else{
+	    if(`${process.env.minioUrl}/${userData.username}-resume.pdf`)
+            	profileData.resume_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-resume.pdf"
+	}
+	if(CVSrc != ""){
             profileData.vitae_url = "https://localhost:9002/directory/"+userData.username+"-cv.pdf"
+	}else{
+	    if(`${process.env.minioUrl}/${userData.username}-cv.pdf`)
+            	profileData.vitae_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-cv.pdf"
+	}
 
         // Send the data to the server in JSON format.
         const profileDataJSON= JSON.stringify(profileData);
@@ -316,6 +329,20 @@ export default function EditProfile({userData, profile}) {
 		console.log("results:", json);
 	}
 
+
+	//check to make sure we are not overWriting link with ""
+        function exists(string) {
+            const minioClient = require('./minioClient');
+	    minioClient.statObject("directory",string, function(err, stat) {
+	    	if(err) {
+	    	    console.log(err)
+		    return false;
+		}
+	   	console.log(stat);
+		return true;
+	    })
+	    return true;
+	}
 
         if(photoSrc != "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
@@ -501,6 +528,7 @@ export default function EditProfile({userData, profile}) {
                             "& > fieldset": { borderColor: photoColor },
                           }
                         }}
+	    		value={profile['photo_url']}
                     />
                     <Button onClick={handleRemovePhoto} >Remove Photo</Button>
                     <canvas hidden id="myCanvas" ></canvas>

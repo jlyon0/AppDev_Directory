@@ -239,9 +239,11 @@ export default function Layout({ children }) {
 			onClick: handleDrawerOpen,
 		    }}
 	    	>
-		    <CustomButton variant="contained">Menu</CustomButton>
+                    <IconButton onClick={handleDrawerOpen} sx={{ p:0 }}>
+                    	<Avatar alt="User Photo" src={avatarSrc} />
+                    </IconButton>
 	    	</IconButton>
-	        <div>{/*Logo*/}</div>
+	        <div>Butler University</div>
 		<Drawer
 		    {...{
 			anchor: "left",

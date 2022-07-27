@@ -1,11 +1,12 @@
+import {Link as RouterLink } from "react"
 
-
-import { AppBar, Container, Menu, MenuItem, Toolbar, Typography, Box, Button, Link, Avatar, Tooltip, IconButton} from '@mui/material'
+import { AppBar, Drawer, Container, Menu, MenuItem, Toolbar, Typography, Box, Button, Link, Avatar, Tooltip, IconButton} from '@mui/material'
 import { useSession } from 'next-auth/react';
 import {useState, useEffect} from "react"
 import { useUser, getSession } from '@auth0/nextjs-auth0';
-
-
+import MenuIcon from '@mui/icons-material';
+import {styled} from '@mui/material/styles';
+import { blue } from '@mui/material/colors';
 let pages =[
     {
         title: 'Home',
@@ -17,11 +18,45 @@ let settings = [
         title: 'Login',
         link: "/api/auth/login",
     }];
+let mobileMenu = [
+    {
+	title: 'Home',
+	link: '/',
+    },{
+	title: 'Login',
+	link: '/api/auth/login',
+    }];
 
 export default function Layout({ children }) {
     const { user, error, isLoading } = useUser()
     const [ avatarSrc, setAvatar] = useState("bulldog.jpg");
     const [ userInfo, setUserInfo] = useState(null);
+    const [state,setState] = useState({
+	    mobileView: false,
+	    drawerOpen: false,
+    })
+
+    const { mobileView, drawerOpen } = state;
+    const CustomButton = styled(Button)(({ theme }) => ({
+	    color: theme.palette.getContrastText(blue[500]),
+	    backgroundColor: blue[500],
+	    '&:hover': {
+		backgroundColor: blue[700],
+	    },
+    }));
+    useEffect(() => {
+	    const setResponsiveness = () => {
+		    return window.innerWidth < 900
+		        ? setState((prevState) => ({ ...prevState, mobileView: true }))
+		        : setState((prevState) => ({ ...prevState, mobileView: false }));
+	    }
+	    setResponsiveness();
+	    window.addEventListener("resize", () => setResponsiveness());
+
+	    return () => {
+		    window.removeEventListener("resize", () => setResponsiveness());
+	    }
+    }, []);
 
     const getProfile = async() => {
 					
@@ -46,6 +81,18 @@ export default function Layout({ children }) {
         	title: 'Logout',
         	link: "/api/auth/logout",
     	    }];
+	
+	let mobileMenu = [
+    	    {
+		title: 'Home',
+		link: '/',
+    	    },{
+		title: "View Profile",
+		link: '/view-profile',
+	    },{
+		title: 'Logout',
+		link: '/api/auth/logout',
+	    }];
 
         if(userInfo == null){
 	    getProfile();
@@ -67,9 +114,9 @@ export default function Layout({ children }) {
     function handleClickSetting({setting}) {
 
     }
-    return (
-        <>
-            <AppBar position="static" >
+    const displayDesktop = () => {
+	    return(
+
                 <Container maxWidth="xl">
                     <Toolbar color="blue">
                         <Typography
@@ -135,6 +182,82 @@ export default function Layout({ children }) {
                         </Box>
                     </Toolbar>
                 </Container>
+	    );
+    }
+    const displayMobile = () => {
+	mobileMenu = [ 
+    	    {
+		title: 'Home',
+		link: '/',
+    	    },{
+		title: 'Login',
+		link: '/api/auth/login',
+	    }];
+	if(user){
+
+	    mobileMenu = [
+    	    	{
+		    title: 'Home',
+		    link: '/',
+    		},{
+		    title: "View Profile",
+		    link: '/view-profile',
+	    	},{
+		    title: 'Logout',
+		    link: '/api/auth/logout',
+	    	}];
+	}
+	const handleDrawerOpen = () => {
+		setState((prevState) => ({ ...prevState,drawerOpen: true }));
+	}
+	const handleDrawerClose = () => {
+		setState((prevState) => ({ ...prevState, drawerOpen: false }));
+	}
+	const getDrawerChoices = () => {
+		console.log("mobileMenu",mobileMenu);
+		return mobileMenu?.map(({title, link})=> {
+		    return(
+			<Link
+			    href={link}
+			>
+			    <MenuItem key={title}>
+				<Typography textAlign="center">{title}</Typography>
+			    </MenuItem>
+			</Link>
+		    )}
+		);
+	}
+
+	return(
+	    <Toolbar>
+	    	<IconButton
+	    	    {...{
+			edge: "start",
+			color: "inherit",
+			"aria-label": "menu",
+			"aria-haspopup": "true",
+			onClick: handleDrawerOpen,
+		    }}
+	    	>
+		    <CustomButton variant="contained">Menu</CustomButton>
+	    	</IconButton>
+	        <div>{/*Logo*/}</div>
+		<Drawer
+		    {...{
+			anchor: "left",
+			    open: drawerOpen,
+			    onClose: handleDrawerClose,
+		    }}
+		>
+		    <div>{getDrawerChoices()}</div>
+		</Drawer>
+	    </Toolbar>
+	);
+    }
+    return (
+        <>
+            <AppBar position="static" >
+	    	{mobileView ? displayMobile() : displayDesktop()}
             </AppBar>
                 <main>{children}</main>
             {/* <Footer/> */}

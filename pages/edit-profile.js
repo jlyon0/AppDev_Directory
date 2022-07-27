@@ -94,7 +94,7 @@ export default function EditProfile({userData, profile}) {
 
     const handleRemovePhoto = () => {
         //remove from minio
-        const minioClient = require('./minioClient');
+        const minioClient = require('../comps/minioClient');
         minioClient.removeObject('directory', `${user.username}-photo.jpg`, function(err) {
             if (err) {
                 return console.log("Unable to remove object", err);
@@ -151,7 +151,7 @@ export default function EditProfile({userData, profile}) {
     }
     const handleRemoveCV = async () => {
         //remove from minio
-        const minioClient = require('./minioClient');
+        const minioClient = require('../comps/minioClient');
         minioClient.removeObject('directory', `${user.username}-cv.jpg`, function(err) {
             if (err) {
                 return console.log("Unable to remove object", err);
@@ -199,7 +199,7 @@ export default function EditProfile({userData, profile}) {
     }
     const handleRemoveResume = () => {
         //remove from minio
-        const minioClient = require('./minioClient');
+        const minioClient = require('../comps/minioClient');
         minioClient.removeObject('directory', `${user.username}-resume.jpg`, function(err) {
             if (err) {
                 return console.log("Unable to remove object", err);
@@ -332,7 +332,7 @@ export default function EditProfile({userData, profile}) {
 
 	//check to make sure we are not overWriting link with ""
         function exists(string) {
-            const minioClient = require('./minioClient');
+            const minioClient = require('../comps/minioClient');
 	    minioClient.statObject("directory",string, function(err, stat) {
 	    	if(err) {
 	    	    console.log(err)
@@ -346,7 +346,7 @@ export default function EditProfile({userData, profile}) {
 
         if(photoSrc != "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
-            const minioClient = require('./minioClient');
+            const minioClient = require('../comps/minioClient');
             minioClient.removeObject('directory', `${userData.username}-photo.jpg`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);
@@ -366,7 +366,7 @@ export default function EditProfile({userData, profile}) {
         }
         if(CVSrc!= "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
-            const minioClient = require('./minioClient');
+            const minioClient = require('../comps/minioClient');
             minioClient.removeObject('directory', `${userData.username}-cv.pdf`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);
@@ -387,7 +387,7 @@ export default function EditProfile({userData, profile}) {
 
         if(resumeSrc!= "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
-            const minioClient = require('./minioClient');
+            const minioClient = require('../comps/minioClient');
             minioClient.removeObject('directory', `${userData.username}-resume.pdf`, function(err) {
                 if (err) {
                     return console.log("Unable to remove object", err);

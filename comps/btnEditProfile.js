@@ -528,7 +528,6 @@ export default function EditProfile({userData, profile}) {
                             "& > fieldset": { borderColor: photoColor },
                           }
                         }}
-	    		value={profile['photo_url']}
                     />
                     <Button onClick={handleRemovePhoto} >Remove Photo</Button>
                     <canvas hidden id="myCanvas" ></canvas>

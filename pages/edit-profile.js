@@ -1,19 +1,17 @@
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
+import { Box, Button, TextField, Link } from '@mui/material';
 import React from 'react';
 import { useState, useRef } from 'react';
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser, getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { useRouter } from 'next/router';
 
 export default function EditProfile({userData, profile}) {
+    console.log("profile",profile)
     const { user, error, isLoading } = useUser();
      if(!user)
         return;
-
+	
+    const router = useRouter()
+    
     const emailRef = useRef('');
     const phoneRef = useRef('');
     const locationRef = useRef('');
@@ -407,20 +405,13 @@ export default function EditProfile({userData, profile}) {
         }
         
 
-        // alert(`Result: ${result}`);
-        setOpen(false);
-        
-        
+	    router.push("/view-profile");
         
     };
 
     return(
         <div>
-            <Button size="small" onClick={handleClickOpen}>Edit</Button>
-
-                
-                
-                    
+       	    <Box sx={{ direction: 'column', m: 3, width: '90%', alignItems: 'center', justifyContent: 'center'}}>            
                     <TextField
                         autoFocus
                         margin="dense"
@@ -569,10 +560,10 @@ export default function EditProfile({userData, profile}) {
                     <Button onClick={handleRemoveResume} >Remove Resume</Button>
                     
                     
-                
+               	    <br/> 
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleSubmit} sx={{ visibility: isVisible_Submit}}>Submit</Button>
-             
+                   <Button onClick={handleSubmit}sx={{ visibility: isVisible_Submit}}>Submit</Button>
+	    </Box>
         </div>
     )
 }
@@ -587,7 +578,8 @@ export const getServerSideProps = withPageAuthRequired({
 		let json = await res.json();
 
 		const userData = json;
-
+	// correct one is commented out 
+        // url = `${process.env.apiUrl}/profiles/${emplid}`
         url = `${process.env.apiUrl}/profile/${emplid}`
         res = await fetch(url)
         json = await res.json();
@@ -596,7 +588,7 @@ export const getServerSideProps = withPageAuthRequired({
 		return {
 			props: {
 				userData: userData,
-                profile: profile,
+                		profile: profile,
 			},
 		};
 	}

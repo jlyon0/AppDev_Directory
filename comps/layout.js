@@ -127,19 +127,19 @@ export default function Layout({ children }) {
                             sx={{
                                 mr:2,
                                 display: { xs: 'none', md: 'flex'},
-                                fontFamily: 'monospace',
+                                fontFamily: 'sans-sarif',
                                 fontWeight: 700,
                                 letterSpacing: '.3rem',
                                 color: 'inherit',
                                 textDecoration: 'none',
                             }}
-                        >LOGO</Typography>
+                        >Butler University</Typography>
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                             {pages.map((page) => (
                                 <Link href={page.link} >
                                     <Button
                                         key={page}
-                                        sx={{ my: 2, color: 'white', display: 'block' }}
+                                        sx={{ my: 2, color: 'white', display: 'block', fontFamily: 'sans-sarif'}} 
                                     >
                                         {page.title}
                                     </Button>
@@ -171,7 +171,10 @@ export default function Layout({ children }) {
                                 {settings.map((setting) => (
                                     <Link href={setting.link}>
                                         <MenuItem key={setting.title} onClick={handleClickSetting({setting})}>
-                                            <Typography textAlign="center">{setting.title}</Typography>
+                                            <Typography 
+						textAlign="center" 
+						sx={{ fontFamily: 'sans-sarif' }}
+					    >{setting.title}</Typography>
                                         </MenuItem>
                                     </Link>
                                     
@@ -221,7 +224,7 @@ export default function Layout({ children }) {
 			    href={link}
 			>
 			    <MenuItem key={title}>
-				<Typography textAlign="center">{title}</Typography>
+				<Typography sx={{ fontFamily: 'sans-sarif' }} textAlign="center">{title}</Typography>
 			    </MenuItem>
 			</Link>
 		    )}
@@ -243,7 +246,7 @@ export default function Layout({ children }) {
                     	<Avatar alt="User Photo" src={avatarSrc} />
                     </IconButton>
 	    	</IconButton>
-	        <div>Butler University</div>
+	        <Typography sx={{ fontFamily: 'sans-sarif' }}>Butler University</Typography>
 		<Drawer
 		    {...{
 			anchor: "left",

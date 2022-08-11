@@ -10,6 +10,7 @@
     "dev-ssl": "(local-ssl-proxy --source 8080 --target 3000) & next dev"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^1.9.1",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.8.4",

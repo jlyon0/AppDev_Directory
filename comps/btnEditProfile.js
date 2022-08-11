@@ -166,8 +166,6 @@ export default function EditProfile({userData, profile}) {
     const handleUploadResume = async (e) => {
         e.preventDefault();
 
-        
-
         if(e.target.files && e.target.files[0]) {
             const fileSize = e.target.files[0].size / 1024 / 1024; // in MiB
             const fileName = "";
@@ -273,33 +271,31 @@ export default function EditProfile({userData, profile}) {
             alert("File uploads are incorrect. See red boarders.")
             return;
         }
-	console.log("photoSrc", photoSrc);
 
-	if(photoSrc == ""){
-	    const string = userData.username + "-photo.jpg"
-	    if(exists(string)){
-		console.log("setting existing photo_url");
-            	profileData.photo_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-photo.jpg"
-	    }
-	}
-	if(resumeSrc != ""){
-            profileData.resume_url = "https://localhost:9002/directory/"+userData.username+"-resume.pdf"
-	}else{
-	    if(`${process.env.minioUrl}/${userData.username}-resume.pdf`)
-            	profileData.resume_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-resume.pdf"
-	}
-	if(CVSrc != ""){
-            profileData.vitae_url = "https://localhost:9002/directory/"+userData.username+"-cv.pdf"
-	}else{
-	    if(`${process.env.minioUrl}/${userData.username}-cv.pdf`)
-            	profileData.vitae_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-cv.pdf"
-	}
+        if(photoSrc != ""){
+            profileData.photo_url = process.env.minioUrl + userData.username + "-photo.jpg"
+        }else{
+            if(profile.photo_url)
+                profileData.photo_url = process.env.minioUrl + userData.username + "-photo.jpg"
+        }
+        if(resumeSrc != ""){
+                profileData.resume_url = process.env.minioUrl + userData.username + "-resume.pdf"
+        }else{
+            if(`${process.env.minioUrl}${userData.username}-resume.pdf`)
+                    profileData.resume_url = process.env.minioUrl + userData.username + "-resume.pdf"
+        }
+        if(CVSrc != ""){
+                profileData.vitae_url = process.env.minioUrl + userData.username + "-cv.pdf"
+        }else{
+            if(`${process.env.minioUrl}${userData.username}-cv.pdf`)
+                    profileData.vitae_url = process.env.minioUrl + userData.username + "-cv.pdf"
+        }
 
         // Send the data to the server in JSON format.
         const profileDataJSON= JSON.stringify(profileData);
 
         // API endpoint where we send form data.
-        let profilesEndpoint = `${process.env.apiUrl}/profiles/${userData.emplid}`;
+        let profilesEndpoint = `${process.env.apiUrl}profiles/${userData.emplid}`;
 
         // Form the request for sending data to the server.
         const options = {
@@ -311,36 +307,31 @@ export default function EditProfile({userData, profile}) {
             },
             body: profileDataJSON,
         };
-        console.log("PUT profileData:");
-        console.log(profileDataJSON);
+
         const response = await fetch(profilesEndpoint, options);
 
         // Get the response data from server as JSON
         // IF server returns the name submitted, that means the form works.
         const result = await response.json();
-        console.log(`Result:`);
-        console.log(result);
+
 	if(result.detail == 'Profile doesn\'t exist'){
-        	console.log("results: ", result);
 		options.method = "POST";
-		profilesEndpoint = `${process.env.apiUrl}/profiles`;
+		profilesEndpoint = `${process.env.apiUrl}profiles`;
 		const res = await fetch(profilesEndpoint, options);
 		const json = await res.json();
-		console.log("results:", json);
 	}
 
 
 	//check to make sure we are not overWriting link with ""
         function exists(string) {
             const minioClient = require('./minioClient');
-	    minioClient.statObject("directory",string, function(err, stat) {
-	    	if(err) {
-	    	    console.log(err)
-		    return false;
-		}
-	   	console.log(stat);
-		return true;
-	    })
+	        minioClient.statObject("directory",string, function(err, stat) {
+	    	    if(err) {
+                    console.log(err)
+                    return false;
+                }
+                return true;
+	        })
 	    return true;
 	}
 
@@ -356,10 +347,9 @@ export default function EditProfile({userData, profile}) {
             // Send new photo to minio
             var buffer = new Buffer(photoSrc.split(",")[1], 'base64')
             var photo_name = `${userData.username}-photo.jpg`;
-            console.log("Photo buffer: ", buffer)
 
             minioClient.putObject('directory', photo_name, buffer, function(err, etag) {
-                return console.log(err, etag) // err should be null
+                // Do nothing
             })
         }else {
             console.log("No photoSrc")
@@ -385,7 +375,7 @@ export default function EditProfile({userData, profile}) {
             console.log("No CVSrc")
         }
 
-        if(resumeSrc!= "") {
+        if(resumeSrc != "") {
             //remove old from minio **** if exists not implemented. Don't want to have to search first, but may have to.
             const minioClient = require('./minioClient');
             minioClient.removeObject('directory', `${userData.username}-resume.pdf`, function(err) {
@@ -406,12 +396,8 @@ export default function EditProfile({userData, profile}) {
             console.log("No resumeSrc")
         }
         
-
         // alert(`Result: ${result}`);
         setOpen(false);
-        
-        
-        
     };
 
     return(

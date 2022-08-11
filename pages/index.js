@@ -2,28 +2,16 @@ import { Button, TextField } from "@mui/material";
 import { useState, useRef } from "react";
 import ProfileGrid from "../comps/profileGrid";
 export default function directory() {
-  const [,setRefresh] = useState(false)
-  
-  const [profiles, setProfiles] = useState([
-    {
-      id: "temp"
-    }
-  ]);
   const [users, setUsers] = useState(null);
 
   const searchRef = useRef('');
-  let ids = [];
   
-
   const handleSearch = async () =>{
     if(searchRef.current.value == ""){
       getAllUsers;
     }
-      
-    
-    console.log("Search: " +searchRef.current.value);
-    console.log("Fetching profiles")
-    let res = await fetch(`${process.env.apiUrl}/search?terms=${searchRef.current.value}&skip=0&limit=100`);
+ 
+    let res = await fetch(`${process.env.apiUrl}search?terms=${searchRef.current.value}&skip=0&limit=100`);
     let json = await res.json();  
     if(json.length == 0){
 	    setUsers(null);
@@ -35,7 +23,6 @@ export default function directory() {
   };
 
   const getAllUsers = async() => {
-    console.log("Fetching profiles")
     const options = {
       method: "GET",
       headers: {
@@ -43,7 +30,7 @@ export default function directory() {
       }
     }
     // const res = await fetch(`${process.env.apiUrl}/users?skip=0&limit=100`, options)
-    const res = await fetch(`${process.env.apiUrl}/users?skip=0&limit=100`, options)
+    const res = await fetch(`${process.env.apiUrl}users?skip=0&limit=100`, options)
     const json = await res.json();
     setUsers(json);
   }
@@ -79,7 +66,7 @@ export default function directory() {
         
         <br/>
         <br/>
-        <Button onClick={getAllUsers} >Search all faculty/staff</Button>  
+        <Button onClick={getAllUsers} >View all faculty/staff</Button>  
         <ProfileGrid users={users}/>              
       </div>
   )

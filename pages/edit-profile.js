@@ -1,11 +1,10 @@
-import { Box, Button, TextField, Link } from '@mui/material';
+import { Box, Button, TextField, Link, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useState, useRef } from 'react';
 import { useUser, getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { useRouter } from 'next/router';
 
 export default function EditProfile({userData, profile}) {
-    console.log("profile",profile)
     const { user, error, isLoading } = useUser();
      if(!user)
         return;
@@ -40,6 +39,23 @@ export default function EditProfile({userData, profile}) {
     const [resumeColor,setResumeColor] = useState('grey');
     let imgsrc = "";
 
+    if( `${process.env.minioUrl}${userData.username}-photo.jpg`) {
+        // Show profile preview
+        var avatarImg = new Image();
+        // Set imgsrc *****
+        imgsrc = `${process.env.minioUrl}${userData.username}-photo.jpg`
+        avatarImg.src = imgsrc;
+        avatarImg.onload = function() {
+            var c = document.getElementById("myCanvas");
+            c.removeAttribute("hidden");
+            var ctx = c.getContext("2d");
+            ctx.canvas.width = 350;
+            ctx.canvas.height = 250;
+            
+            ctx.drawImage(avatarImg,0,0);
+        }
+    }
+
     const handleUploadImage = async (e)=> {
         e.preventDefault();
         
@@ -71,8 +87,6 @@ export default function EditProfile({userData, profile}) {
                     // Set imgsrc *****
                     imgsrc = reader.result;
                     setPhoto(reader.result);
-                    console.log("imgsrc: ", imgsrc)
-                    console.log("photoSrc: ", photoSrc)
                     avatarImg.src = imgsrc;
                     avatarImg.onload = function() {
                         var c = document.getElementById("myCanvas");
@@ -273,31 +287,31 @@ export default function EditProfile({userData, profile}) {
         }
 	console.log("photoSrc", photoSrc);
 
-	if(photoSrc == ""){
-	    const string = userData.username + "-photo.jpg"
-	    if(exists(string)){
-		console.log("setting existing photo_url");
-            	profileData.photo_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-photo.jpg"
-	    }
-	}
+	
+    if(photoSrc != ""){
+        profileData.photo_url = process.env.minioUrl + userData.username + "-photo.jpg"
+    }else{
+        if(`${process.env.minioUrl}${userData.username}-photo.jpg`)
+            profileData.photo_url = process.env.minioUrl + userData.username + "-photo.jpg"
+    }
 	if(resumeSrc != ""){
-            profileData.resume_url = "https://localhost:9002/directory/"+userData.username+"-resume.pdf"
+            profileData.resume_url = process.env.minioUrl + userData.username + "-resume.pdf"
 	}else{
-	    if(`${process.env.minioUrl}/${userData.username}-resume.pdf`)
-            	profileData.resume_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-resume.pdf"
+	    if(`${process.env.minioUrl}${userData.username}-resume.pdf`)
+            	profileData.resume_url = process.env.minioUrl + userData.username + "-resume.pdf"
 	}
 	if(CVSrc != ""){
-            profileData.vitae_url = "https://localhost:9002/directory/"+userData.username+"-cv.pdf"
+            profileData.vitae_url = process.env.minioUrl + userData.username + "-cv.pdf"
 	}else{
-	    if(`${process.env.minioUrl}/${userData.username}-cv.pdf`)
-            	profileData.vitae_url = "https://docker-dev.butler.edu:9002/directory/"+userData.username+"-cv.pdf"
+	    if(`${process.env.minioUrl}${userData.username}-cv.pdf`)
+            	profileData.vitae_url = process.env.minioUrl + userData.username + "-cv.pdf"
 	}
 
         // Send the data to the server in JSON format.
         const profileDataJSON= JSON.stringify(profileData);
 
         // API endpoint where we send form data.
-        let profilesEndpoint = `${process.env.apiUrl}/profiles/${userData.emplid}`;
+        let profilesEndpoint = `${process.env.apiUrl}profiles/${userData.emplid}`;
 
         // Form the request for sending data to the server.
         const options = {
@@ -321,7 +335,7 @@ export default function EditProfile({userData, profile}) {
 	if(result.detail == 'Profile doesn\'t exist'){
         	console.log("results: ", result);
 		options.method = "POST";
-		profilesEndpoint = `${process.env.apiUrl}/profiles`;
+		profilesEndpoint = `${process.env.apiUrl}profiles`;
 		const res = await fetch(profilesEndpoint, options);
 		const json = await res.json();
 		console.log("results:", json);
@@ -412,71 +426,69 @@ export default function EditProfile({userData, profile}) {
     return(
         <div>
        	    <Box sx={{ direction: 'column', m: 3, width: '90%', alignItems: 'center', justifyContent: 'center'}}>            
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="outlined-name"
-                        label="Preferred First Name"
-                        inputRef={firstRef}
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        defaultValue={userData['firstname']}
-                    ></TextField>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="outlined-name"
-                        label="Preferred Last Name"
-                        inputRef={lastRef}
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        defaultValue={userData['lastname']}
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="outlined-name"
-                        label="Email Address"
-                        inputRef={emailRef}
-                        type="email"
-                        fullWidth
-                        variant="outlined"
-                        defaultValue={profile['email']}
-                        onChange={e => validateEmail(e.target)}
-                        sx={{"& .MuiOutlinedInput-root": {
-                            "& > fieldset": { borderColor: emailColor },
-                          }
-                        }}
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="outlined-name"
-                        label="Phone"
-                        inputRef={phoneRef}
-                        type="tel"
-                        fullWidth
-                        variant="outlined"
-                        defaultValue={profile['phone']}
-                        onChange={e => validatePhone(e.target)}
-                        sx={{"& .MuiOutlinedInput-root": {
-                            "& > fieldset": { borderColor: phoneColor },
-                          }
-                        }}
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="outlined-name"
-                        label="Location"
-                        inputRef={locationRef}
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        defaultValue={profile['location']}
-                    />
+                    <Typography variant="h4">{userData['firstname']} {userData['lastname']}</Typography>
+                    <br/>
+                    <Grid container direction="row">
+                        <Grid item id={1}>
+                            
+                            <Grid container direction="column">
+                                <Grid item id="email">
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="outlined-name"
+                                        label="Email Address"
+                                        inputRef={emailRef}
+                                        type="email"
+                                        variant="outlined"
+                                        defaultValue={profile['email']}
+                                        onChange={e => validateEmail(e.target)}
+                                        sx={{"& .MuiOutlinedInput-root": {
+                                            "& > fieldset": { borderColor: emailColor },
+                                        }
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item id="phone">
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="outlined-name"
+                                        label="Phone"
+                                        inputRef={phoneRef}
+                                        type="tel"
+                                        variant="outlined"
+                                        defaultValue={profile['phone']}
+                                        onChange={e => validatePhone(e.target)}
+                                        sx={{"& .MuiOutlinedInput-root": {
+                                            "& > fieldset": { borderColor: phoneColor },
+                                        }
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item id="location">
+                                    <TextField
+                                        autoFocus
+                                        margin="dense"
+                                        id="outlined-name"
+                                        label="Location"
+                                        inputRef={locationRef}
+                                        type="text"
+                                        variant="outlined"
+                                        defaultValue={profile['location']}
+                                    />
+                                </Grid>
+                            </Grid>
+
+                        </Grid>
+                        <Grid item id="photo" sx={{ justifyContent: 'flex-end' }}>
+                            <Box >
+                                <canvas hidden id="myCanvas" ></canvas>
+                            </Box>
+                            
+                        </Grid>
+                        
+                    </Grid>
                     <TextField
                         autoFocus
                         margin="dense"
@@ -484,7 +496,6 @@ export default function EditProfile({userData, profile}) {
                         label="Office Hours"
                         inputRef={officeHoursRef}
                         type="text"
-                        fullWidth
                         variant="outlined"
                         defaultValue={profile['office_hours']}
                     />
@@ -516,10 +527,9 @@ export default function EditProfile({userData, profile}) {
                             "& > fieldset": { borderColor: photoColor },
                           }
                         }}
-	    		value={profile['photo_url']}
                     />
                     <Button onClick={handleRemovePhoto} >Remove Photo</Button>
-                    <canvas hidden id="myCanvas" ></canvas>
+                    
                     <br/>
                     <TextField
                         autoFocus
@@ -573,14 +583,14 @@ export const getServerSideProps = withPageAuthRequired({
 		const session = getSession(ctx.req, ctx.res);
 		
 		const emplid = session.user['https://my.butler.edu/app_metadata'].employeenumber
-		let url = `${process.env.apiUrl}/users/${emplid}`
+		let url = process.env.apiUrl +"users/" +emplid
 		let res = await fetch(url)
 		let json = await res.json();
 
 		const userData = json;
 	// correct one is commented out 
         // url = `${process.env.apiUrl}/profiles/${emplid}`
-        url = `${process.env.apiUrl}/profile/${emplid}`
+        url = `${process.env.apiUrl}profiles/${emplid}`
         res = await fetch(url)
         json = await res.json();
 
@@ -588,7 +598,7 @@ export const getServerSideProps = withPageAuthRequired({
 		return {
 			props: {
 				userData: userData,
-                		profile: profile,
+                profile: profile,
 			},
 		};
 	}

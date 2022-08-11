@@ -14,9 +14,8 @@ import ShowMore from './btnShowMore';
 export default function ProfileCard({user}) {
     const [isLoading, setLoading] = useState(false);
     const [profile, setProfile] = useState(null);
-    console.log("ProfileCard emplid", user.emplid)
 
-    const requestProfile = `${process.env.apiUrl}/profiles/${user.emplid}`
+    const requestProfile = `${process.env.apiUrl}profiles/${user.emplid}`
 
     useEffect( ()=> {
         setLoading(true);
@@ -30,12 +29,15 @@ export default function ProfileCard({user}) {
 
     if (isLoading) return( <p>Loading...</p> );
     if (!profile) return <p>No data</p>
-
+    let tempBio = profile.bio;
+    if( profile.bio.length > 150) {
+        tempBio = profile.bio.substring(0,150) + "...";
+    }
     return (
-        <Card p={1} sx={{ width: '100%', height: '225px', display: 'flex' }}>
+        <Card p={3} height='225px' sx={{ width: '100%', height: '225px', display: 'flex' }}>
             <Box sx={{ width: '55%', height: '150', display: 'flex', flexDirection: 'column'}} >
                 <CardActionArea>
-                    <CardContent>
+                    <CardContent height='200px'>
                         <Typography gutterBottom variant="h5" component="div">
                             {user.firstname} {user.lastname}
                         </Typography>
@@ -43,8 +45,6 @@ export default function ProfileCard({user}) {
                             Email: {profile['email']}   <br/>
                             Phone: {profile['phone']} <br/>
                             Location: {profile.location} <br/>
-                            Office Hours: {profile.office_hours} <br/>
-                            Bio: {profile.bio} <br/>
                         </Typography>    
                     </CardContent>
                 </CardActionArea>

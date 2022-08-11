@@ -13,8 +13,7 @@ export default function EditProfile({ userData, session }) {
 
     if(user) {
         const emplnum = user['https://my.butler.edu/app_metadata'].employeenumber
-    	const requestUser = `${process.env.apiUrl}/users/${emplnum}`
-	console.log("UserData:", userData);
+    	const requestUser = `${process.env.apiUrl}users/${emplnum}`
 
 	if(userData.detail)
 	    return( <div> 
@@ -36,7 +35,7 @@ export const getServerSideProps = withPageAuthRequired({
 		const session = getSession(ctx.req, ctx.res);
 		
 		const emplid = session.user['https://my.butler.edu/app_metadata'].employeenumber
-		const url = `${process.env.apiUrl}/users/${emplid}`
+		const url = `${process.env.apiUrl}users/${emplid}`
 		const res = await fetch(url)
 		const json = await res.json();
 
@@ -49,5 +48,3 @@ export const getServerSideProps = withPageAuthRequired({
 		};
 	}
 });
-
-

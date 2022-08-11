@@ -61,7 +61,7 @@ export default function Layout({ children }) {
     const getProfile = async() => {
 					
 	const emplid = user['https://my.butler.edu/app_metadata'].employeenumber
-	const url = `${process.env.apiUrl}/users/${emplid}`
+	const url = `${process.env.apiUrl}users/${emplid}`
 	const res = await fetch(url);
 	const json = await res.json();
 	if(userInfo == null)
@@ -217,7 +217,6 @@ export default function Layout({ children }) {
 		setState((prevState) => ({ ...prevState, drawerOpen: false }));
 	}
 	const getDrawerChoices = () => {
-		console.log("mobileMenu",mobileMenu);
 		return mobileMenu?.map(({title, link})=> {
 		    return(
 			<Link

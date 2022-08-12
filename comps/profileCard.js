@@ -1,9 +1,6 @@
 import { Grid, Box, Typography, Link, Button } from '@mui/material';
 import { Card, CardActions, CardActionArea, CardContent, CardMedia } from '@mui/material'
 import { useState, useEffect } from "react";
-import EditProfile from './btnEditProfile';
-import ShowMore from './btnShowMore';
-
 
 export default function ProfileCard({user}) {
     const [isLoading, setLoading] = useState(false);
@@ -59,13 +56,6 @@ export default function ProfileCard({user}) {
                 </CardActions>
             </Box>
             <CardContent justifyContent="center"sx={{ width: '45%', height: '100%' }}>
-              {/* <CardMedia  
-                component="img"
-                // sx={{ width: '100%', height: '100%' }}
-                height="300"
-                image={profile.photo_url}
-                alt="No Profile Pic"
-                />   */}
                 <Grid container justifyContent="center">
                     <Grid item id="img">
                         <img src={profile.photo_url} alt="profile photo" height="180" />

@@ -74,7 +74,7 @@ export default function Layout({ children }) {
                 link: '/',
             },{
                 title: 'View Profile',
-                link: '/view-profile/'
+                link: `/profile/${user['https://my.butler.edu/app_metadata'].employeenumber}/view`
             }];
 	settings = [    
     	    {
@@ -88,7 +88,7 @@ export default function Layout({ children }) {
 		link: '/',
     	    },{
 		title: "View Profile",
-		link: '/view-profile',
+		link: `/profile/${user['https://my.butler.edu/app_metadata'].employeenumber}/view`,
 	    },{
 		title: 'Logout',
 		link: '/api/auth/logout',
@@ -204,7 +204,7 @@ export default function Layout({ children }) {
 		    link: '/',
     		},{
 		    title: "View Profile",
-		    link: '/view-profile',
+		    link: `/profile/${user['https://my.butler.edu/app_metadata'].employeenumber}/view`,
 	    	},{
 		    title: 'Logout',
 		    link: '/api/auth/logout',

@@ -1,4 +1,4 @@
-import {useRouter} from 'next/router'
+import { useRouter } from 'next/router'
 import { Box, Button, TextField, Link, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useState, useRef } from 'react';
@@ -294,7 +294,7 @@ const Profile = ({ userData }) => {
                                 autoFocus margin="dense" id="outlined-name" label="Bio" fullWidth
                                 inputRef={bioRef} type="text" variant="outlined" multiline
                                 defaultValue={userData.profile['bio']} rows={8}
-                                sx={{ width: '500px', height: '400px'}}
+                                sx={{ width: '350px', height: '400px'}}
                             />
                         </Grid>
                         <Grid item id="photo-items" justify='right'>
@@ -376,10 +376,12 @@ const Profile = ({ userData }) => {
                 </Grid>
             </Box>
             <Grid justifyContent="center">
-                <Button onClick={handleSubmit}sx={{ visibility: isVisible_Submit}}>Save</Button>
-                <Link href={`/profiles/${userData.emplid}/view`}>
-                    <Button>Cancel</Button>
-                </Link>
+                <Grid item id="submit/cancel">
+                    <Button onClick={handleSubmit}sx={{ visibility: isVisible_Submit}}>Save</Button>
+                    <Link href={`/profile/${userData.emplid}/view`} underline="none">
+                        <Button>Cancel</Button>
+                    </Link>
+                </Grid>
             </Grid>
         </div>
     );

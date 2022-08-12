@@ -1,4 +1,4 @@
-import { Button, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { useState, useRef } from "react";
 import ProfileGrid from "../comps/profileGrid";
 export default function directory() {
@@ -18,8 +18,6 @@ export default function directory() {
     }else{
 	    setUsers(json);
     }
-
-
   };
 
   const getAllUsers = async() => {
@@ -29,7 +27,6 @@ export default function directory() {
         'Content-Type': 'application/json',
       }
     }
-    // const res = await fetch(`${process.env.apiUrl}/users?skip=0&limit=100`, options)
     const res = await fetch(`${process.env.apiUrl}users?skip=0&limit=100`, options)
     const json = await res.json();
     setUsers(json);
@@ -43,30 +40,27 @@ export default function directory() {
  
    return(
       <div>
-        <title>Butler Directory</title>
-          
-        <h2>Search the Butler University Directory</h2>
-        <br/>
-        
-        <TextField 
-          inputRef={searchRef} 
-          autoFocus
-          id="srchDirectory"
-          label="Search Directory"
-          type="text"
-          style={{width: '82%', height: 50}}
-          variant="outlined"
-          onKeyPress={(e) => handleKeyPress(e)}
-        />
-        <Button
-          onClick={handleSearch}
-          style={{width: '10%', height: 50}}
-          >Search
-        </Button>
-        
-        <br/>
-        <br/>
-        <Button onClick={getAllUsers} >View all faculty/staff</Button>  
+        <Box padding={2}>
+          <title>Butler Directory</title>
+          <h2>Search the Butler University Directory</h2><br/>
+          <TextField 
+            inputRef={searchRef} 
+            autoFocus
+            id="srchDirectory"
+            label="Search Directory"
+            type="text"
+            style={{width: '82%', height: 50}}
+            variant="outlined"
+            onKeyPress={(e) => handleKeyPress(e)}
+          />
+          <Button
+            onClick={handleSearch}
+            style={{width: '10%', height: 50}}
+            >Search
+          </Button>
+          <br/><br/>
+          <Button onClick={getAllUsers} >View all faculty/staff</Button>
+        </Box>  
         <ProfileGrid users={users}/>              
       </div>
   )

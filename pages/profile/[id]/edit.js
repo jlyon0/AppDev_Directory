@@ -78,7 +78,6 @@ const Profile = ({ userData }) => {
         return;
         
     }
-
     
     const handleUploadPhoto = (e) => {
         if(e.target.files && e.target.files[0]) {
@@ -195,11 +194,8 @@ const Profile = ({ userData }) => {
             })
         }else{
             if(uploadedPhoto){
-                // send new photo to minio
                 var buffer = new Buffer(photoSrc.split(",")[1], 'base64')
                 var photo_name = `${userData.username}-photo.jpg`;
-                console.log("Photo buffer: ", buffer)
-
                 minioClient.putObject('directory', photo_name, buffer, function(err, etag) {
                     return console.log(err, etag) // err should be null
                 });
@@ -213,11 +209,8 @@ const Profile = ({ userData }) => {
             })
         }else{
             if(uploadedResume){
-                // send new photo to minio
                 var buffer = new Buffer(resumeSrc.split(",")[1], 'base64')
                 var file_name = `${userData.username}-resume.pdf`;
-                console.log("resume buffer: ", buffer)
-
                 minioClient.putObject('directory', file_name, buffer, function(err, etag) {
                     return console.log(err, etag) // err should be null
                 });
@@ -231,19 +224,13 @@ const Profile = ({ userData }) => {
             })
         }else{
             if(uploadedCV){
-                // send new photo to minio
                 var buffer = new Buffer(CVSrc.split(",")[1], 'base64')
                 var file_name = `${userData.username}-cv.pdf`;
-                console.log("cv buffer: ", buffer)
-
                 minioClient.putObject('directory', file_name, buffer, function(err, etag) {
                     return console.log(err, etag) // err should be null
                 });
             }
         }
-
-
-
 
         const profileDataJSON = JSON.stringify(profileData);
         let profilesEndpoint = `${process.env.apiUrl}profiles/${userData.emplid}`;
@@ -253,24 +240,18 @@ const Profile = ({ userData }) => {
             body: profileDataJSON,
         };
 
-        console.log("stringified:", profileDataJSON)
         const response = await fetch(profilesEndpoint, options);
         const result = await response.json();
-        console.log("Result", result);
 
-
-
-
-        // router.push(`/profile/${userData.emplid}/view`);
+        router.push(`/profile/${userData.emplid}/view`);
     }
     return (
         <div>
             <Box sx={{ p: 1, m:1, borderRadius: 2}}>
-                <Typography variant="h4">{userData['firstname']} {userData['lastname']}</Typography>
-                <br/>
-                    <Grid container id="window" direction="row" justifyContent="space-between">
+                    <Grid container id="window" direction="row" justifyContent="space-evenly">
                         <Grid item id={1}>
-
+                            <Typography variant="h4">{userData['firstname']} {userData['lastname']}</Typography>
+                            <br/>
                             <Grid container id="contact-info" direction="column">
                                 <h3>Contact Information</h3>
                                 <Grid item id="email">
@@ -304,21 +285,20 @@ const Profile = ({ userData }) => {
                                         defaultValue={userData.profile['location']}
                                     />
                                 </Grid>
-                                
                             </Grid>
-                            
                         </Grid>
                         <Grid item id="Bio">
+                            <br/><br/>
                             <h3><u>Biography</u></h3>
                             <TextField
                                 autoFocus margin="dense" id="outlined-name" label="Bio" fullWidth
                                 inputRef={bioRef} type="text" variant="outlined" multiline
-                                defaultValue={userData.profile['bio']} rows={10}
-                                sx={{ width: '400px', height: '400px'}}
+                                defaultValue={userData.profile['bio']} rows={8}
+                                sx={{ width: '500px', height: '400px'}}
                             />
                         </Grid>
                         <Grid item id="photo-items" justify='right'>
-                            <Grid container id="photo-items" direction='column'>
+                            <Grid container id="photo-items" direction='column'  justifyContent="space-evenly">
                                 <Grid item id="photo">
                                     <Image src={photoSrc} id='photo' alt="profile photo" width="300" height="300" ></Image>
                                 </Grid>
@@ -343,11 +323,10 @@ const Profile = ({ userData }) => {
                         </Grid>
                     </Grid>
             </Box>
-
             <Box sx={{ p: 1, m:1, borderRadius: 2}}>
-                <Grid container direction="row" spacing={1}>
+                <Grid container direction="row" spacing={1} justifyContent="space-evenly">
                     <Grid item id="officeHours">
-                        <Grid container id="officeHours" direction="column">
+                        <Grid container id="officeHours" direction="column" >
                             <h3>Office Hours</h3>
                             <Grid item id="MondayOH">
                                 <TextField label="Monday" defaultValue={officeHours.Monday} inputRef={mondayRef} onChange={handleOH}/>
@@ -365,49 +344,43 @@ const Profile = ({ userData }) => {
                                 <TextField label="Friday" defaultValue={officeHours.Friday} inputRef={fridayRef} onChange={handleOH}/>
                             </Grid>
                         </Grid>
-                        
                     </Grid>
-                    <Grid item id="documents">
-                        <Grid item id="resume">
-                            <Button variant="contained" component="label">
-                                Upload Resume
-                                <TextField
-                                    autoFocus margin="dense" id="resumeUpload" label="Resume Upload"
-                                    name="resume" type="file" accept=".pdf"
-                                    InputLabelProps={{shrink: true,}}
-                                    variant="outlined"
-                                    onChange={ handleUploadResume }
-                                    sx={{ visibility: 'hidden', width: '0px', height: '0px'}}
-                                    
-                                />
-                            </Button>
-                            <Button variant="contained" onClick={handleRemoveResume} >Remove Resume</Button>
-                        </Grid>
-                        <Grid item id="cv">
-                            <Button variant="contained" component="label">
-                                Upload CV
-                                <TextField
-                                    autoFocus margin="dense" id="resumeCV" label="CV Upload"
-                                    name="cv" type="file" accept=".pdf"
-                                    InputLabelProps={{shrink: true,}}
-                                    variant="outlined"
-                                    onChange={ handleUploadCV }
-                                    sx={{ visibility: 'hidden', width: '0px', height: '0px'}}
-                                    
-                                />
-                            </Button>
-                            <Button variant="contained" onClick={handleRemoveCV} >Remove Resume</Button>
-                        </Grid>
+                    <Grid item id="resume" alignSelf="center">
+                        <Button variant="contained" component="label">
+                            Upload Resume
+                            <TextField
+                                autoFocus margin="dense" id="resumeUpload" label="Resume Upload"
+                                name="resume" type="file" accept=".pdf"
+                                InputLabelProps={{shrink: true,}}
+                                variant="outlined"
+                                onChange={ handleUploadResume }
+                                sx={{ visibility: 'hidden', width: '0px', height: '0px'}}
+                            />
+                        </Button>
+                        <Button variant="contained" onClick={handleRemoveResume} >Remove Resume</Button>
                     </Grid>
-                    
+                    <Grid item id="cv" alignSelf="center">
+                        <Button variant="contained" component="label">
+                            Upload CV
+                            <TextField
+                                autoFocus margin="dense" id="resumeCV" label="CV Upload"
+                                name="cv" type="file" accept=".pdf"
+                                InputLabelProps={{shrink: true,}}
+                                variant="outlined"
+                                onChange={ handleUploadCV }
+                                sx={{ visibility: 'hidden', width: '0px', height: '0px'}}
+                            />
+                        </Button>
+                        <Button variant="contained" onClick={handleRemoveCV} >Remove Resume</Button>
+                    </Grid>
                 </Grid>
             </Box>
-            
-        
-            <Button onClick={handleSubmit}sx={{ visibility: isVisible_Submit}}>Save</Button>
-            <Link href={`/profiles/${userData.emplid}/view`}>
-                <Button>Cancel</Button>
-            </Link>
+            <Grid justifyContent="center">
+                <Button onClick={handleSubmit}sx={{ visibility: isVisible_Submit}}>Save</Button>
+                <Link href={`/profiles/${userData.emplid}/view`}>
+                    <Button>Cancel</Button>
+                </Link>
+            </Grid>
         </div>
     );
 }
@@ -421,7 +394,6 @@ export const getServerSideProps = withPageAuthRequired({
 		let url = process.env.apiUrl +"users/one/" + id + "?include=profile"
 		let res = await fetch(url)
 		let json = await res.json();
-
 		const userData = json;
 
 		return {

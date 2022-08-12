@@ -1,11 +1,5 @@
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import Box from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardActionArea from '@mui/material/CardActionArea';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import { Grid, Box, Typography, Link, Button } from '@mui/material';
+import { Card, CardActions, CardActionArea, CardContent, CardMedia } from '@mui/material'
 import { useState, useEffect } from "react";
 import EditProfile from './btnEditProfile';
 import ShowMore from './btnShowMore';
@@ -49,23 +43,34 @@ export default function ProfileCard({user}) {
                     </CardContent>
                 </CardActionArea>
                 <CardActions>
-                    <Grid container justifyContent='center'>
+                    <Grid container justifyContent='center' alignContent='flex-end'>
                         <Grid item>
-                            <ShowMore user={user} profile={profile}/>
+                            <Link href={`profile/${user.emplid}/view`}>
+                                <Button>More</Button>
+                            </Link>
                         </Grid>
                         <Grid item>
-                            <EditProfile userData={user} profile={profile}/>
+                            <Link href={`profile/${user.emplid}/edit`}>
+                                <Button>Edit</Button>
+                            </Link>
+                            
                         </Grid>
                     </Grid>  
                 </CardActions>
             </Box>
-            <CardContent sx={{ width: '45%', height: '100%' }}>
-              <CardMedia  
+            <CardContent justifyContent="center"sx={{ width: '45%', height: '100%' }}>
+              {/* <CardMedia  
                 component="img"
-                sx={{ width: '100%', height: '100%' }}
+                // sx={{ width: '100%', height: '100%' }}
+                height="300"
                 image={profile.photo_url}
                 alt="No Profile Pic"
-                />  
+                />   */}
+                <Grid container justifyContent="center">
+                    <Grid item id="img">
+                        <img src={profile.photo_url} alt="profile photo" height="180" />
+                    </Grid>
+                </Grid>
             </CardContent>
         </Card>
     )

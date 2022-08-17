@@ -11,15 +11,23 @@
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^1.9.1",
+    "@babel/runtime": "^7.18.9",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.8.4",
     "@mui/material": "^5.9.0",
+    "@types/react-instantsearch-dom": "^6.12.3",
+    "algoliasearch": "^4.14.2",
+    "instantsearch.js": "^4.44.0",
     "minio": "^7.0.29",
     "next": "12.2.2",
-    "next-auth": "^4.10.0",
+    "node-fetch": "^3.2.10",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-instantsearch-core": "^6.31.1",
+    "react-instantsearch-dom": "^6.31.1",
+    "typesense": "^1.4.0",
+    "typesense-instantsearch-adapter": "^2.4.1"
   },
   "devDependencies": {
     "eslint": "8.19.0",

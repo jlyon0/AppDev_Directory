@@ -42,7 +42,7 @@ export default function directory() {
       <div>
         <Box padding={2}>
           <title>Butler Directory</title>
-          <h2>Search the Butler University Directory</h2><br/>
+          <h2>Butler University Directory</h2><br/>
           <TextField 
             inputRef={searchRef} 
             autoFocus

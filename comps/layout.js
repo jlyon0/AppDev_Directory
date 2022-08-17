@@ -1,7 +1,6 @@
 import {Link as RouterLink } from "react"
 
 import { AppBar, Drawer, Container, Menu, MenuItem, Toolbar, Typography, Box, Button, Link, Avatar, Tooltip, IconButton} from '@mui/material'
-import { useSession } from 'next-auth/react';
 import {useState, useEffect} from "react"
 import { useUser, getSession } from '@auth0/nextjs-auth0';
 import MenuIcon from '@mui/icons-material';

@@ -1,12 +1,15 @@
 import { Grid, Box, Typography, Link, Button } from '@mui/material';
 import { Card, CardActions, CardActionArea, CardContent, CardMedia } from '@mui/material'
 import { useState, useEffect } from "react";
+import { useUser, getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import BtnEdit from './btnEdit';
 
-export default function ProfileCard({user}) {
+export default function ProfileCard({userData}) {
     const [isLoading, setLoading] = useState(false);
     const [profile, setProfile] = useState(null);
+    const { user, error } = useUser();
 
-    const requestProfile = `${process.env.apiUrl}profiles/${user.emplid}`
+    const requestProfile = `${process.env.apiUrl}profiles/${userData.emplid}`
 
     useEffect( ()=> {
         setLoading(true);
@@ -20,17 +23,13 @@ export default function ProfileCard({user}) {
 
     if (isLoading) return( <p>Loading...</p> );
     if (!profile) return <p>No data</p>
-    let tempBio = profile.bio;
-    if( profile.bio.length > 150) {
-        tempBio = profile.bio.substring(0,150) + "...";
-    }
     return (
         <Card p={3} height='225px' sx={{ width: '100%', height: '225px', display: 'flex' }}>
             <Box sx={{ width: '55%', height: '150', display: 'flex', flexDirection: 'column'}} >
                 <CardActionArea>
                     <CardContent height='200px'>
                         <Typography gutterBottom variant="h5" component="div">
-                            {user.firstname} {user.lastname}
+                            {userData.firstname} {userData.lastname}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
                             Email: {profile['email']}   <br/>
@@ -42,15 +41,12 @@ export default function ProfileCard({user}) {
                 <CardActions>
                     <Grid container justifyContent='center' alignContent='flex-end'>
                         <Grid item>
-                            <Link href={`profile/${user.emplid}/view`}>
-                                <Button>More</Button>
+                            <Link href={`profile/${userData.emplid}/view`}>
+                                <Button>More Info</Button>
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href={`profile/${user.emplid}/edit`}>
-                                <Button>Edit</Button>
-                            </Link>
-                            
+                            <BtnEdit userData={userData}/>
                         </Grid>
                     </Grid>  
                 </CardActions>
